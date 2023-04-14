@@ -1,0 +1,104 @@
+<canvas id="ventana" width="600" height="400"></canvas>
+<canvas id="lienzo" width="540" height="370"></canvas>
+
+<script>
+
+    var canva_ventana = document.getElementById('ventana'); // Configurar Canva ventana
+    var pincel_1 = canva_ventana.getContext('2d');
+
+    var pantalla = document.getElementById('lienzo'); // Configuarar Canva lienzo
+        pantalla.style.position = "absolute";
+        pantalla.style.left = "57px";
+        pantalla.style.top = "27px";
+    var pincel = pantalla.getContext('2d');
+
+    //ELEMENTOS EN PANTALLA:
+    pincel_1.fillStyle = 'lightgrey'; // Dibujar fondo.
+    pincel_1.fillRect(0, 0, 600, 400);
+
+    pincel_1.fillStyle = 'white'; // Dibujar lienzo de dibujo.
+    pincel_1.fillRect(50, 20, 540, 370);
+    pincel_1.strokeStyle="black";
+    pincel_1.strokeRect(50, 20, 540, 370);
+
+    var xl = 10; // limite paleta en x izquierda
+    var xr = 40; // limite paleta en x derecha
+
+    dibujarRectangulo(xl, 20, 30, 30, "red"); // Dibujar cuadro color rojo en paleta.
+    dibujarRectangulo(xl, 55, 30, 30, "green"); // Dibujar cuadro color verde en paleta.
+    dibujarRectangulo(xl, 90, 30, 30, "blue"); // Dibujar cuadro color azul en paleta.
+    //________________________.
+    
+    var puedoDibujar = false;
+    var colores = ["red", "green", "blue"];
+    var color = colores[2];
+
+
+    function dibujarRectangulo(x, y, base, altura, color) {
+
+        pincel_1.fillStyle=color;
+        pincel_1.fillRect(x,y, base, altura);
+        pincel_1.strokeStyle="black";
+        pincel_1.strokeRect(x,y, base, altura);
+    }
+
+    function dibujarCirculo(evento) {
+
+        if(puedoDibujar) {
+            var x = evento.pageX - pantalla.offsetLeft;
+            var y = evento.pageY - pantalla.offsetTop;
+            pincel.fillStyle = color;
+            pincel.beginPath();
+            pincel.arc(x, y, 5, 0, 2 * 3.14);
+            pincel.fill();
+        }
+
+    }
+
+    function habilitarDibujar() {
+
+        puedoDibujar = true;
+    }
+
+    function deshabilitarDibujar() {
+
+        puedoDibujar = false;
+    }
+ 
+    function cambiarColor(evento) {
+
+        var x = evento.pageX - canva_ventana.offsetLeft;
+        var y = evento.pageY - canva_ventana.offsetTop
+
+        if ((x >= xl)&&
+            (x <= xr)&&
+            (y >= 20)&&
+            (y <= 50) ) {
+            
+            color = colores[0];
+        }   
+
+        if ((x >= xl)&&
+            (x <= xr)&&
+            (y >= 55)&&
+            (y <= 85) ) {
+            
+            color = colores[1];
+        }   
+
+        if ((x >= xl)&&
+            (x <= xr)&&
+            (y >= 90)&&
+            (y <= 110) ) {
+            
+            color = colores[2];
+        }   
+        
+    }
+
+    pantalla.onmousemove = dibujarCirculo;
+    pantalla.onmousedown = habilitarDibujar;
+    pantalla.onmouseup = deshabilitarDibujar;
+    canva_ventana.onclick = cambiarColor;
+
+    </script>
